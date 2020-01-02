@@ -8,3 +8,5 @@ const PlaceController_1 = require("./PlaceController");
 exports.PlaceController = PlaceController_1.PlaceController;
 const PaymentController_1 = require("./PaymentController");
 exports.PaymentController = PaymentController_1.PaymentController;
+const WebhookController_1 = require("./WebhookController");
+exports.WebhookController = WebhookController_1.WebhookController;

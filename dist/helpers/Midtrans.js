@@ -31,7 +31,7 @@ class Midtrans {
         var hexadecimal1 = (generatedID >>> 0).toString(16);
         var generatedID = parseInt(generatedID.toString().split('').reverse().join(''));
         var hexadecimal2 = (generatedID >>> 0).toString(16);
-        const order_id = `edukatrip-id-${(hexadecimal1 + hexadecimal2).slice(0, 12)}`;
+        const order_id = `edukatrip-id-${(hexadecimal1 + hexadecimal2).slice(0, 16)}`;
         return order_id;
     }
     static getInstance() {
@@ -42,25 +42,29 @@ class Midtrans {
             try {
                 var midtrans = this.getInstance();
                 var id = this.createOrderId();
-                var options = {
-                    "transaction_details": {
-                        "order_id": id,
-                        "gross_amount": 10000
-                    }
-                };
-                var result = yield snap.createTransaction(Object.assign(Object.assign({}, options), params));
+                // var options = {
+                //     "transaction_details": {
+                //         "order_id": id,
+                //         "gross_amount": 10000
+                //     }
+                // }
+                var order_id = { "order_id": id };
+                var req = Object.assign(Object.assign({}, params), { transaction_details: Object.assign(Object.assign({}, order_id), params.transaction_details) });
+                var result = yield snap.createTransaction(req);
+                // console.log({ ...params,transaction_details: {...order_id,...params.transaction_details} })
             }
             catch (error) {
-                return new Error(error);
+                throw error;
             }
-            return result;
+            return { req, res: result };
         });
     }
     static status(order_id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const response = yield snap.transaction.status(order_id);
-                console.log(response, order_id);
+                // console.log(response)
+                return response;
             }
             catch (error) {
                 console.log(error);

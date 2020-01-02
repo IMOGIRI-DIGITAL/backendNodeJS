@@ -27,7 +27,7 @@ export class Midtrans
         var generatedID = parseInt(generatedID.toString().split('').reverse().join(''))
         var hexadecimal2: string = (generatedID >>> 0 ).toString(16)
 
-        const order_id = `edukatrip-id-${ (hexadecimal1 + hexadecimal2).slice(0,12) }`
+        const order_id = `edukatrip-id-${ (hexadecimal1 + hexadecimal2).slice(0,16) }`
 
         return order_id
     }
@@ -37,30 +37,34 @@ export class Midtrans
         return (new Midtrans);
     }
 
-    static async create(params: object)
+    static async create(params: object | any)
     {
         try {
             var midtrans = this.getInstance()
             var id = this.createOrderId()
-            var options = {
-                "transaction_details": {
-                    "order_id": id,
-                    "gross_amount": 10000
-                }
-            }
-            
-            var result = await snap.createTransaction({ ...options, ...params })
+            // var options = {
+            //     "transaction_details": {
+            //         "order_id": id,
+            //         "gross_amount": 10000
+            //     }
+            // }
+            var order_id = { "order_id": id }
+            var req = { ...params,transaction_details: {...order_id,...params.transaction_details} }
+            var result = await snap.createTransaction(req)
+            // console.log({ ...params,transaction_details: {...order_id,...params.transaction_details} })
         } catch (error) {
-            return new Error(error)
+            
+            throw error
         }
-        return result
+        return { req, res: result}
     }
     static async status(order_id: string)
     {
         try {
             
             const response = await snap.transaction.status(order_id)
-            console.log(response, order_id)
+            // console.log(response)
+            return response
         } catch (error) {
             console.log(error)
         }

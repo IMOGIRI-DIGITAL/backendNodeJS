@@ -20,7 +20,10 @@ class Payment {
     routes(app) {
         return __awaiter(this, void 0, void 0, function* () {
             app.get(`${this.prefix}`, this.PaymentController.index);
-            app.post(`${this.prefix}`, this.PaymentController.index);
+            app.post(`${this.prefix}/payment`, this.PaymentController.payment);
+            app.post(`${this.prefix}`, this.PaymentController.create);
+            app.get(`${this.prefix}/status/:transaction_id`, this.PaymentController.status);
+            app.get(`${this.prefix}/history/:user_id`, this.PaymentController.getHistory);
         });
     }
 }

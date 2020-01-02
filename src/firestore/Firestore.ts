@@ -5,7 +5,7 @@ import * as serviceAccount from "./../firestore/edukatrip-firebase-adminsdk.json
 const credential: object = serviceAccount;
 admin.initializeApp({credential: admin.credential.cert(credential)});
 
-const firestore = admin.firestore()
+export const firestore = admin.firestore()
 
 
 export class Firestore {
@@ -26,19 +26,30 @@ export class Firestore {
 
 
     public static async insert(data: object, key: string = '')
-    {;
+    {
         var result: any;
         try {
             
             if ( key == '' ) // key otomatis di buat jika valuenya kosong
                 result = await firestore.collection(this.collections).add(data);
-            else
+            else{
+
                 result = await firestore.collection(this.collections).doc(key).set(data);
+                result = await firestore
+                    .collection(this.collections)
+                    .doc(key)
+                    .get();
+            
+                if ( typeof result.data() == 'undefined' )
+                    result = false
+                else
+                    result = {id: result.id,... result.data()}
+            }
         } catch (error) {
             return false
         }
 
-
+        
         if (result)
             return result.id;
         else

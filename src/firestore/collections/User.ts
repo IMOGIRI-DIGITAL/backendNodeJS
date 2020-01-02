@@ -18,6 +18,7 @@ export class User extends Firestore {
         try {
 
             var saved = await Firestore.insert(data, key);
+            console.log(saved)
         } catch (error) {
             console.log(error)
             return false;

@@ -1,3 +1,7 @@
-import { Firestore as FS } from "./Firestore";
+import { Firestore as FS, firestore } from "./Firestore";
 
-export const Firestore = FS
+const Firestore =  FS
+const db = firestore
+export {
+    Firestore, db
+}

@@ -52,13 +52,14 @@ export class PlaceController {
         
         
 
-        
-        return res.json({
+        var result = {
             ...data,
             google_maps: {
                 ...placeDetail
             }
-        })
+        }
+        console.log(result)
+        return res.json(result)
         
     }
 

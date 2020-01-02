@@ -25,6 +25,7 @@ class User extends Firestore_1.Firestore {
             this.getInstance();
             try {
                 var saved = yield Firestore_1.Firestore.insert(data, key);
+                console.log(saved);
             }
             catch (error) {
                 console.log(error);

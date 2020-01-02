@@ -23,11 +23,11 @@ const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const serviceAccount = __importStar(require("./../firestore/edukatrip-firebase-adminsdk.json"));
 const credential = serviceAccount;
 firebase_admin_1.default.initializeApp({ credential: firebase_admin_1.default.credential.cert(credential) });
-const firestore = firebase_admin_1.default.firestore();
+exports.firestore = firebase_admin_1.default.firestore();
 class Firestore {
     static all() {
         return __awaiter(this, void 0, void 0, function* () {
-            var result = yield firestore.collection(this.collections).get();
+            var result = yield exports.firestore.collection(this.collections).get();
             var data = [];
             result.forEach((doc) => {
                 data.push(Object.assign({ id: doc.id }, doc.data()));
@@ -37,13 +37,21 @@ class Firestore {
     }
     static insert(data, key = '') {
         return __awaiter(this, void 0, void 0, function* () {
-            ;
             var result;
             try {
                 if (key == '') // key otomatis di buat jika valuenya kosong
-                    result = yield firestore.collection(this.collections).add(data);
-                else
-                    result = yield firestore.collection(this.collections).doc(key).set(data);
+                    result = yield exports.firestore.collection(this.collections).add(data);
+                else {
+                    result = yield exports.firestore.collection(this.collections).doc(key).set(data);
+                    result = yield exports.firestore
+                        .collection(this.collections)
+                        .doc(key)
+                        .get();
+                    if (typeof result.data() == 'undefined')
+                        result = false;
+                    else
+                        result = Object.assign({ id: result.id }, result.data());
+                }
             }
             catch (error) {
                 return false;
@@ -57,7 +65,7 @@ class Firestore {
     static update(data, key) {
         return __awaiter(this, void 0, void 0, function* () {
             var result;
-            result = yield firestore.collection(this.collections).doc(key).update(data);
+            result = yield exports.firestore.collection(this.collections).doc(key).update(data);
             if (result)
                 return true;
             else
@@ -67,7 +75,7 @@ class Firestore {
     static delete(key) {
         return __awaiter(this, void 0, void 0, function* () {
             var result;
-            result = yield firestore.collection(this.collections).doc(key).delete();
+            result = yield exports.firestore.collection(this.collections).doc(key).delete();
             if (result)
                 return true;
             else
@@ -80,7 +88,7 @@ class Firestore {
             ;
             var result;
             if (typeof params == 'string') {
-                result = yield firestore
+                result = yield exports.firestore
                     .collection(this.collections)
                     .doc(params)
                     .get();
@@ -91,7 +99,7 @@ class Firestore {
             }
             else if (typeof params == 'object') {
                 var lastParams;
-                result = yield firestore
+                result = yield exports.firestore
                     .collection(this.collections);
                 for (lastParams in params)
                     ;
@@ -118,7 +126,7 @@ class Firestore {
             ;
             var result;
             var lastParams;
-            result = yield firestore
+            result = yield exports.firestore
                 .collection(this.collections);
             for (lastParams in params)
                 ;
@@ -161,7 +169,7 @@ class Firestore {
             var objectTo = Object.keys(to)[0];
             from = { name: objectFrom, value: from[objectFrom] };
             to = { name: objectTo, value: to[objectTo] };
-            var result = yield firestore.collection(this.collections)
+            var result = yield exports.firestore.collection(this.collections)
                 .where(from.name, '>=', from.value)
                 .where(to.name, '<=', to.value).get();
             result.forEach((doc) => {
@@ -174,7 +182,7 @@ class Firestore {
         return __awaiter(this, void 0, void 0, function* () {
             var data;
             var result;
-            result = yield firestore.collection(this.collections).orderBy(document, 'asc').limit(1).get();
+            result = yield exports.firestore.collection(this.collections).orderBy(document, 'asc').limit(1).get();
             result.forEach((doc) => {
                 data = Object.assign({ id: doc.id }, doc.data());
             });
@@ -185,7 +193,7 @@ class Firestore {
         return __awaiter(this, void 0, void 0, function* () {
             var data;
             var result;
-            result = yield firestore.collection(this.collections).orderBy(document, 'desc').limit(1).get();
+            result = yield exports.firestore.collection(this.collections).orderBy(document, 'desc').limit(1).get();
             result.forEach((doc) => {
                 data = Object.assign({ id: doc.id }, doc.data());
             });

@@ -44,7 +44,9 @@ class PlaceController {
             var placeDetail = {
                 name, address: formatted_address, rating, ratings_total: user_ratings_total
             };
-            return res.json(Object.assign(Object.assign({}, data), { google_maps: Object.assign({}, placeDetail) }));
+            var result = Object.assign(Object.assign({}, data), { google_maps: Object.assign({}, placeDetail) });
+            console.log(result);
+            return res.json(result);
         });
     }
     search(req, res) {

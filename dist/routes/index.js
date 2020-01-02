@@ -7,12 +7,14 @@ const User_1 = __importDefault(require("./User"));
 const Places_1 = __importDefault(require("./Places"));
 const Payment_1 = __importDefault(require("./Payment"));
 const Packages_1 = __importDefault(require("./Packages"));
+const Webhook_1 = __importDefault(require("./Webhook"));
 class IndexRoute {
     routes(app) {
         Places_1.default.routes(app);
         User_1.default.routes(app);
         Packages_1.default.routes(app);
         Payment_1.default.routes(app);
+        Webhook_1.default.routes(app);
     }
 }
 exports.IndexRoute = IndexRoute;
